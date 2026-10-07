@@ -1,58 +1,59 @@
 # calibre-library
 
-Reglas y procedimientos para mantener prolija una biblioteca personal de
-[Calibre](https://calibre-ebook.com), pensados para que los ejecute un agente
-([Claude Code](https://claude.com/claude-code)) a través de
+Rules and procedures for keeping a personal [Calibre](https://calibre-ebook.com)
+library tidy, written to be carried out by an agent
+([Claude Code](https://claude.com/claude-code)) through
 [calibre-mcp](https://github.com/caelum29/calibre-mcp).
 
-Este repo no contiene libros ni la base de datos de Calibre: solo las
-convenciones y el modo de trabajo.
+This repo contains no books and no Calibre database: only the conventions and
+the way of working.
 
-## Cómo está armado
+## How it is set up
 
 ```
-Mac (curaduría)                      Raspberry Pi (servidor)
+Mac (curation)                       Raspberry Pi (server)
 ┌──────────────────────────┐         ┌─────────────────────────┐
-│ Claude Code              │         │ biblioteca Calibre      │
-│   └─ calibre-mcp         │         │ (libros + metadata.db)  │
-│        └─ Content Server │── SMB ──│                         │
-│           de Calibre     │         │ Calibre-Web ── OPDS ────┼──▶ Kindle (KOReader)
+│ Claude Code              │         │ Calibre library         │
+│   └─ calibre-mcp         │         │ (books + metadata.db)   │
+│        └─ Calibre        │── SMB ──│                         │
+│           Content Server │         │ Calibre-Web ── OPDS ────┼──▶ Kindle (KOReader)
 └──────────────────────────┘         └─────────────────────────┘
 ```
 
-- **Calibre de escritorio** es la herramienta de curaduría; el agente escribe a
-  través de su Content Server.
-- **Calibre-Web** sirve la biblioteca fuera de casa y por OPDS, y permite subir
-  libros desde el celular.
-- **KOReader** en el Kindle navega la biblioteca por OPDS, así que los tags son
-  literalmente su menú.
+- **Calibre desktop** is the curation tool; the agent writes through its
+  Content Server.
+- **Calibre-Web** serves the library outside the house and over OPDS, and
+  allows uploading books from a phone.
+- **KOReader** on the Kindle browses the library over OPDS, so the tags are
+  literally its menu.
 
-## Qué hay acá
+## What is in here
 
-- [`CLAUDE.md`](./CLAUDE.md): las reglas completas. Claude Code las carga
-  automáticamente al abrir una sesión en este directorio.
+- [`CLAUDE.md`](./CLAUDE.md): the full rules. Claude Code loads them
+  automatically when a session is opened in this directory.
 
-En resumen:
+In short:
 
-- **Integridad:** un solo escritor a la vez sobre `metadata.db`; Calibre-Web
-  sube libros pero no edita metadatos.
-- **Metadatos:** título real, autores como "Nombre Apellido", ISBN, idioma,
-  editorial normalizada y tapa real.
-- **Tags:** vocabulario cerrado, con un tag de tipo (`Técnico`, `No ficción`,
-  `Ficción`) y uno o dos de tema por libro.
-- **Formatos:** EPUB como canónico; PDF solo cuando no hay alternativa.
-- **Bandeja de entrada:** un libro sin tag de tipo es un libro sin curar.
+- **Integrity:** a single writer at a time on `metadata.db`; Calibre-Web
+  uploads books but does not edit metadata.
+- **Metadata:** real title, authors as "First Last", ISBN, language, normalized
+  publisher, and the real cover.
+- **Tags:** a closed vocabulary, with one type tag (`Técnico`, `No ficción`,
+  `Ficción`) and one or two topic tags per book. Tag names are in Spanish.
+- **Formats:** EPUB is canonical; PDF only when there is no alternative.
+- **Inbox:** a book without a type tag is an uncurated book.
 
-## Uso
+## Usage
 
-1. Abrir Calibre (con el Content Server activo) y Claude Code en este directorio.
-2. Pedir lo que haga falta, por ejemplo:
-   - "agregá el libro que está en Downloads"
-   - "revisá la bandeja de entrada"
-   - "hacé el mantenimiento"
-3. Cerrar Calibre al terminar.
+1. Open Calibre (with the Content Server running) and Claude Code in this
+   directory.
+2. Ask for whatever is needed, for example:
+   - "add the book that is in Downloads"
+   - "go through the inbox"
+   - "run the maintenance"
+3. Close Calibre when done.
 
-## Requisitos
+## Requirements
 
-- Calibre con el Content Server activo y escrituras locales permitidas.
-- `calibre-mcp` registrado en Claude Code con `CALIBRE_MCP_ENABLE_WRITE=1`.
+- Calibre with the Content Server running and local writes allowed.
+- `calibre-mcp` registered in Claude Code with `CALIBRE_MCP_ENABLE_WRITE=1`.

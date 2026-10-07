@@ -1,107 +1,110 @@
-# Biblioteca Calibre
+# Calibre Library
 
-Reglas y procedimientos para mantener la biblioteca de ebooks. Este repo guarda
-solo reglas y scripts; los libros y `metadata.db` viven en la Raspberry y nunca
-se versionan acá.
+Rules and procedures for maintaining the ebook library. This repo holds only
+rules and scripts; the books and `metadata.db` live on the Raspberry Pi and are
+never versioned here.
 
 ## Setup
 
-- **Biblioteca:** `books`, en la Raspberry (`192.168.1.15`), montada por SMB en
-  la Mac como `/Volumes/media/books`.
-- **Calibre de escritorio (Mac):** herramienta de curaduría. Su Content Server
-  (`localhost:8080`) es lo que usa el MCP `calibre`.
-- **Calibre-Web (Raspberry):** acceso desde afuera de casa, OPDS y subida de
-  libros desde el celular.
-- **Kindle (KOReader):** lee la biblioteca por OPDS contra Calibre-Web.
+- **Library:** `books`, on the Raspberry Pi (`192.168.1.15`), mounted over SMB
+  on the Mac as `/Volumes/media/books`.
+- **Calibre desktop (Mac):** the curation tool. Its Content Server
+  (`localhost:8080`) is what the `calibre` MCP server talks to.
+- **Calibre-Web (Raspberry Pi):** access from outside the house, OPDS, and book
+  uploads from the phone.
+- **Kindle (KOReader):** reads the library over OPDS from Calibre-Web.
 
-## Integridad
+## Integrity
 
-`metadata.db` es SQLite sobre un share de red, compartido entre Calibre y
-Calibre-Web. Estas reglas existen para no corromperlo.
+`metadata.db` is SQLite on a network share, shared between Calibre and
+Calibre-Web. These rules exist to keep it from getting corrupted.
 
-1. **Un escritor a la vez.** Calibre de escritorio se abre para una sesión de
-   curaduría y se cierra al terminar. Calibre-Web solo puede escribir (subir
-   libros) cuando Calibre de escritorio está cerrado.
-2. **Calibre-Web sube, no edita.** Desde Calibre-Web solo se suben libros; los
-   metadatos se corrigen después desde Calibre de escritorio / MCP.
-3. **No tocar las carpetas a mano.** Nunca renombrar, mover ni borrar archivos
-   dentro de `books/` por fuera de Calibre.
-4. **Antes de escribir, verificar** que el MCP responde (`calibre_ping`) y que
-   la biblioteca activa es `books`.
-5. **Operaciones destructivas** (borrar libros, borrar formatos, fusionar):
-   mostrar primero qué se va a hacer y esperar confirmación explícita.
+1. **One writer at a time.** Calibre desktop is opened for a curation session
+   and closed when done. Calibre-Web may only write (upload books) while
+   Calibre desktop is closed.
+2. **Calibre-Web uploads, it does not edit.** Only uploads happen in
+   Calibre-Web; metadata is fixed afterwards from Calibre desktop / MCP.
+3. **Never touch the folders by hand.** Never rename, move, or delete files
+   inside `books/` outside of Calibre.
+4. **Before writing, verify** that the MCP server responds (`calibre_ping`) and
+   that the active library is `books`.
+5. **Destructive operations** (deleting books, deleting formats, merging):
+   show what is going to happen first and wait for explicit confirmation.
 
-## Convenciones de metadatos
+## Metadata conventions
 
-| Campo | Regla |
+| Field | Rule |
 |---|---|
-| Título | Título real, subtítulo tras dos puntos. Sin año, editorial ni nombre de archivo. |
-| Autor | "Nombre Apellido", una entrada por persona. Nunca "Apellido, Nombre". |
-| Serie | Solo series reales (ficción o colecciones numeradas). No usar para agrupar temas. |
-| Identificadores | ISBN siempre que exista. Sin identificadores inventados o mal tipados. |
-| Idioma | Siempre cargado (`eng`, `spa`). |
-| Editorial | Nombre normalizado, una sola grafía por editorial (p. ej. "O'Reilly Media"). |
-| Fecha | Fecha de publicación de la edición, no la del archivo. |
-| Tapa | La tapa real de la edición, no la primera página del PDF. |
-| Comentarios | Sinopsis o vacío. Nunca restos del nombre de archivo. |
+| Title | The real title, subtitle after a colon. No year, publisher, or filename leftovers. |
+| Author | "First Last", one entry per person. Never "Last, First". |
+| Series | Real series only (fiction or numbered collections). Not for grouping topics. |
+| Identifiers | ISBN whenever one exists. No made-up or mistyped identifiers. |
+| Language | Always set (`eng`, `spa`). |
+| Publisher | Normalized name, one spelling per publisher (e.g. "O'Reilly Media"). |
+| Date | Publication date of the edition, not the file's date. |
+| Cover | The real cover of the edition, not the first page of the PDF. |
+| Comments | A synopsis or empty. Never filename leftovers. |
 
 ## Tags
 
-Vocabulario cerrado: los tags son el menú de navegación de OPDS en el Kindle.
+Closed vocabulary: tags are the OPDS navigation menu on the Kindle. Tag names
+are in Spanish and must be used exactly as written here.
 
-- **Exactamente un tag de tipo por libro:** `Técnico`, `No ficción`, `Ficción`.
-- **Uno o dos tags de tema** de esta lista:
+- **Exactly one type tag per book:** `Técnico`, `No ficción`, `Ficción`.
+- **One or two topic tags** from this list:
   - Técnico / No ficción: `C++`, `Embedded`, `Diseño de software`, `Carrera`,
     `Finanzas`, `Robótica`, `Ciencia y sociedad`
-  - Ficción: el género (`Ciencia ficción`, `Policial`, ...)
-- **Un tema nuevo** se agrega a esta lista solo cuando hay un segundo libro que
-  lo justifique, y se pregunta antes de crearlo.
-- Los tags que vienen en el archivo (BISAC, palabras clave del editor) se
-  descartan siempre.
-- El estado de lectura no va en tags.
+  - Ficción: the genre (`Ciencia ficción`, `Policial`, ...)
+- **A new topic** is added to this list only when a second book justifies it,
+  and only after asking.
+- Tags that come with the file (BISAC codes, publisher keywords) are always
+  discarded.
+- Reading status does not go in tags.
 
-## Formatos
+## Formats
 
-- **EPUB** es el formato canónico.
-- **PDF** solo si no existe EPUB o si el libro depende del layout.
-- **MOBI** no se conserva cuando hay EPUB.
+- **EPUB** is the canonical format.
+- **PDF** only when no EPUB exists or the book depends on its layout.
+- **MOBI** is not kept when an EPUB exists.
 
-## Procedimientos
+## Procedures
 
-### Alta desde la Mac
+### Adding a book from the Mac
 
-1. El archivo va a `~/Downloads` (nunca directo a la biblioteca).
-2. Importar con `calibre_add_book`.
-3. Buscar ISBN (`calibre_extract_isbn`) y completar metadatos
+1. The file goes to `~/Downloads` (never straight into the library).
+2. Import it with `calibre_add_book`.
+3. Find the ISBN (`calibre_extract_isbn`) and fill in the metadata
    (`calibre_recover_metadata`).
-4. Asignar tipo, tema e idioma según las reglas de arriba.
-5. Mostrar el resultado antes de dar el alta por cerrada.
+4. Assign type, topic, and language following the rules above.
+5. Show the result before considering the book done.
 
-### Bandeja de entrada (libros subidos por Calibre-Web)
+### Inbox (books uploaded through Calibre-Web)
 
-Un libro sin tag de tipo es un libro sin curar. Buscar con:
+A book without a type tag is an uncurated book. Find them with:
 
 ```
 not tags:"=Técnico" and not tags:"=No ficción" and not tags:"=Ficción"
 ```
 
-A cada resultado se le aplican los pasos 3 a 5 del alta.
+Apply steps 3 to 5 of the procedure above to each result.
 
-### Mantenimiento (mensual o cada ~10 libros)
+### Maintenance (monthly, or every ~10 books)
 
-1. Revisar la bandeja de entrada.
-2. `calibre_quality_report` y `calibre_find_duplicates`.
-3. Verificar que no haya tags fuera del vocabulario.
-4. Revisar las tapas mirándolas (ver abajo); el reporte de calidad no las evalúa.
-5. Reportar solo lo que requiera una decisión.
+1. Go through the inbox.
+2. Run `calibre_quality_report` and `calibre_find_duplicates`.
+3. Check that no tags fall outside the vocabulary.
+4. Review the covers by looking at them (see below); the quality report does
+   not evaluate them.
+5. Report only what needs a decision.
 
-### Tapas
+### Covers
 
-Ninguna herramienta detecta una tapa incorrecta: hay que mirar la imagen. El
-caso típico es un PDF cuya "tapa" es la portadilla interior o la primera página.
+No tool detects a wrong cover: the image has to be looked at. The typical case
+is a PDF whose "cover" is the inner title page or its first page.
 
-1. Bajar la tapa actual de `http://localhost:8080/get/cover/<id>/books` y mirarla.
-2. Si está mal, buscar la real por ISBN (editorial, Amazon, Open Library) y
-   mirarla antes de aplicarla; preferir la de mayor resolución.
-3. Aplicar con `calibredb set_metadata <id> --field cover:<archivo>` contra el
+1. Download the current cover from
+   `http://localhost:8080/get/cover/<id>/books` and look at it.
+2. If it is wrong, find the real one by ISBN (publisher, Amazon, Open Library)
+   and look at it before applying it; prefer the highest resolution.
+3. Apply it with `calibredb set_metadata <id> --field cover:<file>` against the
    Content Server.
