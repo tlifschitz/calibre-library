@@ -47,14 +47,13 @@ Calibre-Web. These rules exist to keep it from getting corrupted.
 
 ## Tags
 
-Closed vocabulary: tags are the OPDS navigation menu on the Kindle. Tag names
-are in Spanish and must be used exactly as written here.
+Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
 
-- **Exactly one type tag per book:** `Técnico`, `No ficción`, `Ficción`.
+- **Exactly one type tag per book:** `Technical`, `Non-fiction`, `Fiction`.
 - **One or two topic tags** from this list:
-  - Técnico / No ficción: `C++`, `Embedded`, `Diseño de software`, `Carrera`,
-    `Finanzas`, `Robótica`, `Ciencia y sociedad`
-  - Ficción: the genre (`Ciencia ficción`, `Policial`, ...)
+  - Technical / Non-fiction: `C++`, `Embedded`, `Software Design`, `Career`,
+    `Finance`, `Robotics`, `Science & Society`
+  - Fiction: the genre (`Science Fiction`, `Crime`, ...)
 - **A new topic** is added to this list only when a second book justifies it,
   and only after asking.
 - Tags that come with the file (BISAC codes, publisher keywords) are always
@@ -83,7 +82,7 @@ are in Spanish and must be used exactly as written here.
 A book without a type tag is an uncurated book. Find them with:
 
 ```
-not tags:"=Técnico" and not tags:"=No ficción" and not tags:"=Ficción"
+not tags:"=Technical" and not tags:"=Non-fiction" and not tags:"=Fiction"
 ```
 
 Apply steps 3 to 5 of the procedure above to each result.
