@@ -31,6 +31,10 @@ Mac (curation)                       Raspberry Pi (server)
 
 - [`CLAUDE.md`](./CLAUDE.md): the full rules. Claude Code loads them
   automatically when a session is opened in this directory.
+- [`koreader/`](./koreader): the RSS feeds loaded in KOReader's News
+  Downloader, with the ones kept in reserve and the ones rejected
+  ([`FEEDS.md`](./koreader/FEEDS.md)), plus a copy of the active
+  `feed_config.lua`.
 
 In short:
 
