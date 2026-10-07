@@ -92,4 +92,16 @@ A cada resultado se le aplican los pasos 3 a 5 del alta.
 1. Revisar la bandeja de entrada.
 2. `calibre_quality_report` y `calibre_find_duplicates`.
 3. Verificar que no haya tags fuera del vocabulario.
-4. Reportar solo lo que requiera una decisión.
+4. Revisar las tapas mirándolas (ver abajo); el reporte de calidad no las evalúa.
+5. Reportar solo lo que requiera una decisión.
+
+### Tapas
+
+Ninguna herramienta detecta una tapa incorrecta: hay que mirar la imagen. El
+caso típico es un PDF cuya "tapa" es la portadilla interior o la primera página.
+
+1. Bajar la tapa actual de `http://localhost:8080/get/cover/<id>/books` y mirarla.
+2. Si está mal, buscar la real por ISBN (editorial, Amazon, Open Library) y
+   mirarla antes de aplicarla; preferir la de mayor resolución.
+3. Aplicar con `calibredb set_metadata <id> --field cover:<archivo>` contra el
+   Content Server.
