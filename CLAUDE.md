@@ -54,7 +54,7 @@ Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
 - **One or two topic tags** from this list:
   - Technical / Non-fiction: `C++`, `Embedded`, `Software Design`, `Career`,
     `Finance`, `Robotics`, `Science & Society`, `Machine Learning`
-  - Paper: `Condition Monitoring`, `Machine Learning`
+  - Paper: `Condition Monitoring`, `Machine Learning`, `Software Design`
   - Fiction: the genre (`Science Fiction`, `Crime`, ...)
 - **A new topic** is added to this list only when a second book justifies it,
   and only after asking.
@@ -95,7 +95,13 @@ A book without a type tag is an uncurated book. Find them with:
 not tags:"=Technical" and not tags:"=Non-fiction" and not tags:"=Fiction" and not tags:"=Paper"
 ```
 
-Apply steps 3 to 5 of the procedure above to each result.
+If Calibre desktop was open while the books were uploaded, it does not know
+about them: its Content Server keeps serving the old list. Compare the book
+count in `metadata.db` with what the server returns, and restart Calibre before
+writing anything if they differ.
+
+Apply steps 3 to 5 of the procedure above to each result. Calibre-Web uploads
+the same file twice now and then; check new items for byte-identical duplicates.
 
 ### Maintenance (monthly, or every ~10 books)
 
