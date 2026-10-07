@@ -128,6 +128,11 @@ EPUB when available and PDF otherwise.
   `My Clippings.txt`, or the `koreader` folder.
 - Replacing a file loses its KOReader progress and highlights (the `.sdr`
   folder next to it); check for progress before replacing a book.
+- After copying, compare each file on the Kindle with its library original by
+  checksum, not by size: a copy over USB has come out corrupted with the right
+  size before.
+- Calibre's "On Device" column is not a reliable check. Its Kindle USB driver
+  does not recognize EPUB, so every EPUB shows as missing even when it is there.
 
 ### Covers
 
