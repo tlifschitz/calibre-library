@@ -49,16 +49,26 @@ Calibre-Web. These rules exist to keep it from getting corrupted.
 
 Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
 
-- **Exactly one type tag per book:** `Technical`, `Non-fiction`, `Fiction`.
+- **Exactly one type tag per item:** `Technical`, `Non-fiction`, `Fiction`,
+  `Paper`.
 - **One or two topic tags** from this list:
   - Technical / Non-fiction: `C++`, `Embedded`, `Software Design`, `Career`,
-    `Finance`, `Robotics`, `Science & Society`
+    `Finance`, `Robotics`, `Science & Society`, `Machine Learning`
+  - Paper: `Condition Monitoring`, `Machine Learning`
   - Fiction: the genre (`Science Fiction`, `Crime`, ...)
 - **A new topic** is added to this list only when a second book justifies it,
   and only after asking.
 - Tags that come with the file (BISAC codes, publisher keywords) are always
   discarded.
 - Reading status does not go in tags.
+
+## Papers
+
+Research papers live in the same library with the type tag `Paper`.
+
+- Title and authors come from the paper's first page, not the filename.
+- Publisher holds the journal or conference name; date is the publication year.
+- The first page is an acceptable cover.
 
 ## Formats
 
@@ -82,7 +92,7 @@ Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
 A book without a type tag is an uncurated book. Find them with:
 
 ```
-not tags:"=Technical" and not tags:"=Non-fiction" and not tags:"=Fiction"
+not tags:"=Technical" and not tags:"=Non-fiction" and not tags:"=Fiction" and not tags:"=Paper"
 ```
 
 Apply steps 3 to 5 of the procedure above to each result.
@@ -95,6 +105,29 @@ Apply steps 3 to 5 of the procedure above to each result.
 4. Review the covers by looking at them (see below); the quality report does
    not evaluate them.
 5. Report only what needs a decision.
+
+### After every curation session
+
+Metadata edits live only in `metadata.db` until they are written into the book
+files. Copies downloaded over OPDS or copied to the Kindle show whatever is
+inside the file, so run this for the books that changed:
+
+```
+calibredb --with-library 'http://localhost:8080/#books' embed_metadata <ids>
+```
+
+### Kindle
+
+The Kindle holds copies, not the library. Sideloaded files live in
+`documents/Books` and `documents/Papers`, named `Title - First Author.ext`,
+EPUB when available and PDF otherwise.
+
+- When the Kindle is mounted over USB (`/Volumes/Kindle`), replace stale copies
+  with the curated files from the library instead of editing them in place.
+- Never touch `documents/Downloads` (Amazon content), `documents/dictionaries`,
+  `My Clippings.txt`, or the `koreader` folder.
+- Replacing a file loses its KOReader progress and highlights (the `.sdr`
+  folder next to it); check for progress before replacing a book.
 
 ### Covers
 

@@ -39,7 +39,7 @@ In short:
 - **Metadata:** real title, authors as "First Last", ISBN, language, normalized
   publisher, and the real cover.
 - **Tags:** a closed vocabulary, with one type tag (`Technical`,
-  `Non-fiction`, `Fiction`) and one or two topic tags per book.
+  `Non-fiction`, `Fiction`, `Paper`) and one or two topic tags per book.
 - **Formats:** EPUB is canonical; PDF only when there is no alternative.
 - **Inbox:** a book without a type tag is an uncurated book.
 
