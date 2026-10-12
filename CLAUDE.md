@@ -45,6 +45,13 @@ Calibre-Web. These rules exist to keep it from getting corrupted.
 | Cover | The real cover of the edition, not the first page of the PDF. |
 | Comments | A synopsis or empty. Never filename leftovers. |
 
+Calibre keeps two hidden sort fields, `sort` (title) and `author_sort`. They
+are what Calibre, Calibre-Web and OPDS order by, and they are not updated when
+the title or authors are changed through `calibredb` or the MCP server. Every
+time a title or author changes, set them explicitly: `sort` is the title with a
+leading article moved to the end ("Elements of Statistical Learning, The"), and
+`author_sort` is "Last, First" joined with " & ".
+
 ## Tags
 
 Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
@@ -55,7 +62,7 @@ Closed vocabulary: tags are the OPDS navigation menu on the Kindle.
   - Technical / Non-fiction: `C++`, `Embedded`, `Software Design`, `Career`,
     `Finance`, `Robotics`, `Science & Society`, `Machine Learning`
   - Paper: `Condition Monitoring`, `Machine Learning`, `Software Design`
-  - Fiction: the genre (`Science Fiction`, `Crime`, ...)
+  - Fiction: the genre (`Science Fiction`, `Literary Fiction`, `Crime`, ...)
 - **A new topic** is added to this list only when a second book justifies it,
   and only after asking.
 - Tags that come with the file (BISAC codes, publisher keywords) are always
