@@ -21,7 +21,11 @@ Calibre-Web. These rules exist to keep it from getting corrupted.
 
 1. **One writer at a time.** Calibre desktop is opened for a curation session
    and closed when done. Calibre-Web may only write (upload books) while
-   Calibre desktop is closed.
+   Calibre desktop is closed. Calibre loads the whole database into memory at
+   startup and never re-reads it, so an instance left open goes stale as soon
+   as Calibre-Web writes. Therefore: start every session by quitting Calibre
+   (`calibre --shutdown-running-calibre`), checking that the share is mounted,
+   and opening it again; end every session by quitting it.
 2. **Calibre-Web uploads, it does not edit.** Only uploads happen in
    Calibre-Web; metadata is fixed afterwards from Calibre desktop / MCP.
 3. **Never touch the folders by hand.** Never rename, move, or delete files
